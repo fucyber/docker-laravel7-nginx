@@ -2,10 +2,18 @@ FROM alpine:3.11
 
 ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 
+ENV TZ='Asia/Bangkok'
+
 RUN apk --update add ca-certificates wget && \
     echo "https://dl.bintray.com/php-alpine/v3.11/php-7.3" >> /etc/apk/repositories
 
 RUN apk --no-cache add curl nano
+
+RUN apk add tzdata && \
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \ 
+    echo "${TZ}" > /etc/timezone && \
+    apk del tzdata  
+
 
 # Create user
 RUN adduser -D -u 1000 -g 1000 -s /bin/sh www-data && \
